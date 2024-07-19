@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/txt_unit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:paddingEnd="30dp"
+        android:text=""
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/edt_unit"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/edt_unit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
+
+    <EditText
+        android:id="@+id/edt_unit"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="자연수를 입력해주세요"
+        android:maxLength="9"
+        android:inputType="number"
+        android:textColorHint="#D7AD80FB"
+        android:textSize="30sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@id/txt_unit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <TextView
+        android:id="@+id/txt_cm_m"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cm"
+        app:layout_constraintBaseline_toBaselineOf="@id/edt_unit"
+        app:layout_constraintBottom_toBottomOf="@id/edt_unit"
+        app:layout_constraintStart_toEndOf="@id/edt_unit"
+        app:layout_constraintTop_toTopOf="@id/edt_unit" />
+
+    <TextView
+        android:id="@+id/txt_m_cm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="m"
+        app:layout_constraintBaseline_toBaselineOf="@id/txt_unit"
+        app:layout_constraintStart_toEndOf="@id/edt_unit" />
+
+    <ImageButton
+        android:id="@+id/btn_convert"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/baseline_swap_vert_24"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toBottomOf="@id/txt_unit"
+        app:layout_constraintStart_toEndOf="@id/edt_unit"
+        app:layout_constraintTop_toTopOf="@id/edt_unit" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
