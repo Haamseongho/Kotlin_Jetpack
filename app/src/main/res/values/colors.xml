@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="tint">#65B368</color>
     <color name="operator">#217E25</color>
+    <color name="defaultTextColor">#FF000000</color>
 </resources>

@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Chapter5" parent="Base.Theme.Chapter5" />
+    <style name="Theme.Chapter5" parent="Theme.Material3.DayNight.NoActionBar"/>
 </resources>
