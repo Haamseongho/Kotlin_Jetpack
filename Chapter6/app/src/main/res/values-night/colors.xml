@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="playColor">#FFEB3B</color>
+    <color name="pauseColor">#FF9800</color>
+    <color name="stopColor">#2196F3</color>
+    <color name="lapColor">#E91E63</color>
+</resources>
