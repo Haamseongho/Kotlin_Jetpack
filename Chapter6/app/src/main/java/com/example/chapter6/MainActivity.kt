@@ -114,23 +114,16 @@ class MainActivity : AppCompatActivity() {
                     3) View.postDelayed
                     4) handler -> handle message or handle runnable object
                      */
-                    runOnUiThread {
-                        binding.timeTextView.text = String.format("%02d:%02d", minutes, seconds)
-                        binding.tickTextView.text = deciSeconds.toString()
-
-                        binding.countdownGroup.isVisible = false
-                    }
-
+                    binding.timeTextView.text = String.format("%02d:%02d", minutes, seconds)
+                    binding.tickTextView.text = deciSeconds.toString()
+                    binding.countdownGroup.isVisible = false
                 } else {
                     currentCountDownDeciSecond -= 1
                     val seconds = currentCountDownDeciSecond / 10
                     val progress =
                         (currentCountDownDeciSecond / (countdownSecond * 10f)) * 100
-
-                    binding.root.post {
-                        binding.countdownTextView.text = String.format("%02d", seconds)
-                        binding.countdownProgressBar.progress = progress.toInt()
-                    }
+                    binding.countdownTextView.text = String.format("%02d", seconds)
+                    binding.countdownProgressBar.progress = progress.toInt()
                 }
                 if (currentDeciSecond == 0 && currentCountDownDeciSecond < 31 && currentCountDownDeciSecond % 10 == 0) {
                     val toneType =
