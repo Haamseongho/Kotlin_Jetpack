@@ -149,4 +149,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/countdownGroup"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="countdownTitleTextView, countdownTextView,countdownProgressBar, countdonwUnitTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
