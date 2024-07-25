@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Chapter5"
 include(":app")
+include(":app")
  
