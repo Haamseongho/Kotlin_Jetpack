@@ -10,7 +10,7 @@ import com.example.voca_book.models.Word
 
 // ItemClickListener 추가
 class WordAdapter(
-    private val list: MutableList<Word>,
+    val list: MutableList<Word>,
     private val itemClickListener: ItemClickListener? = null
 ): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 
@@ -70,6 +70,6 @@ class WordAdapter(
 }
 
 interface ItemClickListener {
-    abstract fun onClick(word: Word)
+    fun onClick(word: Word)
 
 }

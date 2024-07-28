@@ -1,6 +1,10 @@
 package com.example.voca_book
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +14,15 @@ import com.example.voca_book.databinding.ActivityAddBinding
 import com.example.voca_book.models.AppDatabase
 import com.example.voca_book.models.Word
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddBinding
+    private var handler: Handler? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,22 +34,27 @@ class AddActivity : AppCompatActivity() {
             insets
         }
         initViews()
+        handler = Handler(Looper.getMainLooper())
         binding.addButton.setOnClickListener {
             add()
         }
     }
 
-    private fun add(){
+    private fun add() {
         val text = binding.textInputEditText.text.toString()
         val mean = binding.meanTextInputEditText.text.toString()
         val chipId = binding.typeChipGroup.checkedChipId
         val type = findViewById<Chip>(chipId).text.toString() // 칩그룹안에 있는 아이디로 칩을 받아옴
         val word = Word(text, mean, type)
-
-        // RoomDB 접근할 때 UI Thread에서 하면 오류
-        AppDatabase.getInstance(this)?.wordDao()?.insert(word)
-        Toast.makeText(this, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show()
-        finish() // add 마무리
+        CoroutineScope(Dispatchers.IO).launch {
+            AppDatabase.getInstance(applicationContext)?.wordDao()?.insert(word)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(applicationContext, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show()
+                val intent = Intent().putExtra("isUpdated", true) // 그냥 추가만 해도 넘어감
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 
     private fun initViews() {
@@ -56,8 +70,8 @@ class AddActivity : AppCompatActivity() {
         )
         // types => collection
         binding.typeChipGroup.apply {
-            types.forEach {
-                type -> addView(createChip(type)) // chip 나온걸 addView로 넣어주기 (그룹에 넣기)
+            types.forEach { type ->
+                addView(createChip(type)) // chip 나온걸 addView로 넣어주기 (그룹에 넣기)
             }
         }
     }

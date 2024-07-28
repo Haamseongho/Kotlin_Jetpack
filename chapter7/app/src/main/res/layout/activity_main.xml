@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:src="@drawable/twotone_auto_delete_24"
+        android:src="@drawable/baseline_auto_fix_normal_24"
         app:layout_constraintEnd_toEndOf="@+id/deleteImageView"
         app:layout_constraintStart_toStartOf="@id/barrier"
         app:layout_constraintTop_toBottomOf="@+id/deleteImageView" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:padding="16dp"
-        android:src="@drawable/baseline_auto_fix_normal_24"
+        android:src="@drawable/twotone_auto_delete_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/barrier"
         app:layout_constraintTop_toTopOf="parent" />

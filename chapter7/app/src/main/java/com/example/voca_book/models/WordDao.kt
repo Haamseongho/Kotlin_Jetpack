@@ -13,7 +13,7 @@ interface WordDao {
     fun getAll(): List<Word>
 
     @Query("SELECT * from word ORDER BY id DESC LIMIT 1") // 최신꺼 하나만 받기
-    fun getLatestWord()
+    fun getLatestWord(): List<Word>
 
     @Insert
     fun insert(word: Word)
