@@ -1,12 +1,14 @@
 package com.example.voca_book
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity(), ItemClickListener {
             when(result.resultCode){
                 RESULT_OK -> {
                     // Word -> Parcelable 데이터
-                    val updatedWord = result.data?.getParcelableExtra<Word>("editWord")// 받음
+                    val updatedWord = result.data?.getParcelableExtra<Word>(/* name = */ "editWord")// 받음
                     Log.d("haams_updateWord", "!!$updatedWord")
                     if(updatedWord != null){
                         updateEditWord(updatedWord)
