@@ -34,25 +34,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.loadImageButton.setOnClickListener {
+            checkPermission()
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        initViews()
-
-    }
-
-
-    private fun initViews() {
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        binding.loadImageButton.setOnClickListener {
-            checkPermission()
-        }
         initRecyclerView()
     }
+
+
+
 
 
     private fun initRecyclerView() {
@@ -114,14 +111,23 @@ class MainActivity : AppCompatActivity() {
             REQUEST_READ_EXTERNAL_STORAGE
         ) // requestCode = 100
     }
-
+    /*
+    registerForActivityResult를 통해서 갤러리에 이미지를 선택하는 절차를 넣어둿는데 여기서는 uriList를 콜백으로 받습니다.
+    이것은 갤러리로부터 이미지를 선택했을때 각 이미지의 uri를 List로 만든 것입니다.
+    문제는 이 선택한 이미지를 어댑터의 모델이 되고 있는 ImageItems의 Image에 넣어주는 것이 중요합니다.
+    그리고 이것은 지금 선택한 이미지의 uri를 단순히 모델쪽인 ImageItems의 image에 넣어준 상태이며
+    현재 ImageItems(새로 선택한 값들이 들어간 이미지)에 기존 이미지를 넣어주는 작업을 해야합니다.
+     */
     private fun updateImages(uriList: List<Uri>?) {
         Log.i("MainActivity", "$uriList")
-        //
-
+        // uriList?.map 을 통해 현재 리스트 안의 Uri를 반환해낼 수 있고 이걸 ImageItems.Image에 넣어주는 것을 합니다.
         val images = uriList?.map {
             ImageItems.Image(it)
         }
+        // 기존 ImageAdapter에서 사용하는 현재 리스트의 mutableList를 가져오면
+        // 이는 ImageItems의 리스트일것이고 앞서 뽑은 Images에 .let 확장함수를 써서
+        // addAll(it -> 기존에 있던 이미지)를 넣어 진행합니다.
+        // imageAdapter.submitList(updatedImages) 하면 데이터 Notify를 수행합니다.
         val updatedImages = imageAdapter?.currentList?.toMutableList()?.apply {
             images?.let { addAll(it) }
         }  // 추가하는것 (변경된 리스트 자체를 넣고 싶음)
