@@ -1,9 +1,14 @@
 package com.example.mygallery
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore.Images
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mygallery.adapters.ImageAdapter
 import com.example.mygallery.adapters.ImageItems
 import com.example.mygallery.databinding.ActivityMainBinding
+import com.example.mygallery.frames.FrameActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -44,12 +50,42 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        binding.toolbar.apply {
+            title = "사진가져오기"
+            setSupportActionBar(this)
+        }
         initRecyclerView()
+        binding.navigateFrameActivityButton.setOnClickListener {
+            navigateToFrameActivity()
+        }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_add -> {
+                checkPermission()
+                true
+            }
 
+            else -> {
+                 super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    private fun navigateToFrameActivity() {
+        val images = imageAdapter?.currentList?.filterIsInstance<ImageItems.Image>()
+            ?.map { it.uri.toString() }?.toTypedArray()
+        val intent = Intent(this, FrameActivity::class.java)
+            .putExtra("images", images)
+
+        startActivity(intent)
+    }
 
 
     private fun initRecyclerView() {
@@ -71,13 +107,13 @@ class MainActivity : AppCompatActivity() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_MEDIA_IMAGES
             ) == PackageManager.PERMISSION_GRANTED -> {
                 loadImage()
             }
 
             shouldShowRequestPermissionRationale(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_MEDIA_IMAGES
             ) -> {
                 showPermissionInfoDialog()
             }
@@ -105,12 +141,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestReadExternalStorage() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-            REQUEST_READ_EXTERNAL_STORAGE
-        ) // requestCode = 100
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
+                REQUEST_READ_EXTERNAL_STORAGE
+            )
+        } // requestCode = 100
     }
+
     /*
     registerForActivityResult를 통해서 갤러리에 이미지를 선택하는 절차를 넣어둿는데 여기서는 uriList를 콜백으로 받습니다.
     이것은 갤러리로부터 이미지를 선택했을때 각 이미지의 uri를 List로 만든 것입니다.
@@ -139,6 +178,8 @@ class MainActivity : AppCompatActivity() {
     // RequestPermissions에 대한 콜백을 관리
     // > requestReadExternalStorage() -> ActivityCompat.requestPermissions 처리
     // 해당 결과 콜백을 OnRequestPermissionsResult로 받음
+
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

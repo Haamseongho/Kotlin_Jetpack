@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Diary</string>
+    <string name="add_info">정보저장</string>
+    <string name="add_picture">사진추가하기</string>
+</resources>
