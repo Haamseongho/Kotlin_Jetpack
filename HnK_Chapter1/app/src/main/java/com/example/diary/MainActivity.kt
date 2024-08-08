@@ -4,6 +4,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -14,13 +16,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.diary.adapters.DiaryAdapter
+import com.example.diary.adapters.MediaAdapter
 import com.example.diary.databinding.ActivityMainBinding
 import com.example.diary.models.DiaryContents
+import com.example.diary.models.MediaContents
 import com.example.diary.models.REQUEST_IMAGE_PERMISSON
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MediaAdapter.ItemClickListener {
     private lateinit var binding: ActivityMainBinding
     private var diaryAdapter: DiaryAdapter? = null
     private val imageLauncher =
@@ -38,19 +44,71 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            binding.mainFloatingButton.setOnClickListener {
+                manageMediaProcess(2)
+            }
+        }
         initRecyclerView()
     }
+
+    private fun manageMediaProcess(type: Int) {
+        //val inflater = baseContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        //val itemView: View = inflater.inflate(R.layout.item_media_management, null)
+        // val mediaAdapter = MediaAdapter(mutableListOf(MediaContents()))
+        val itemView = LayoutInflater.from(this).inflate(R.layout.media_dialog, null)
+        var itemList = emptyList<MediaContents>()
+        if (type == 1) {
+            itemList = mutableListOf(
+                MediaContents("사진촬영", R.drawable.baseline_add_a_photo_24),
+                MediaContents("갤러리", R.drawable.baseline_assistant_photo_24)
+            )
+        } else if (type == 2) {
+            itemList = mutableListOf(
+                MediaContents("사진촬영", R.drawable.baseline_add_a_photo_24),
+                MediaContents("갤러리", R.drawable.baseline_assistant_photo_24),
+                MediaContents("녹음하기", R.drawable.baseline_audio_file_24),
+                MediaContents("녹음듣기", R.drawable.baseline_audiotrack_24)
+            )
+        }
+
+
+        val builder = AlertDialog.Builder(this)
+        builder.setView(itemView)
+        builder.setTitle("사진/녹음을 통한 추억 관리")
+            .setNegativeButton("닫기", null)
+        val dialog = builder.create()
+        dialog.show()
+
+        val mediaAdapter = MediaAdapter(itemList.toMutableList(), this)
+        val mediaRecyclerView = itemView.findViewById<RecyclerView>(R.id.mediaRecyclerView)
+        mediaRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context).apply {
+                orientation = VERTICAL
+            }
+            adapter = mediaAdapter
+        }
+    }
+
+
     private fun initRecyclerView() {
         diaryAdapter = DiaryAdapter(object : DiaryAdapter.ItemClickListener {
             @RequiresApi(Build.VERSION_CODES.TIRAMISU)
             override fun onLoadMoreItems() {
-                checkImagePermission()
+                manageMediaProcess(1)
             }
         })
         binding.mainRecyclerView.apply {
+
+            val spanCount = 2
+            val gridLayoutManager = GridLayoutManager(context, spanCount)
+            gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return 1
+                }
+            }
+            layoutManager = gridLayoutManager
             adapter = diaryAdapter
-            layoutManager = GridLayoutManager(context, 2)
         }
     }
 
@@ -84,8 +142,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun checkImagePermission() {
+    private fun checkImagePermission(type: Int) {
         when {
+
             ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES)
                     == PackageManager.PERMISSION_GRANTED -> {
                 loadImages()
@@ -137,6 +196,33 @@ class MainActivity : AppCompatActivity() {
                 if (resultCode == PackageManager.PERMISSION_GRANTED) {
                     loadImages()
                 }
+            }
+        }
+    }
+
+    // 대화상자 팝업 나올때 클릭 리스너 구현
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onItemClick(adapterPosition: Int) {
+        when (adapterPosition) {
+            // checkImagePermission = 1 : 카메라
+            0 -> {
+                Log.d("onItemClick", "사진촬영")
+                checkImagePermission(1)
+            }
+
+            // checkImagePermission = 2 : 갤러리
+            1 -> {
+                checkImagePermission(2)
+            }
+
+            2 -> {
+                Log.d("onItemClick", "녹음하기")
+                checkImagePermission(3)
+            }
+
+            3 -> {
+                Log.d("onItemClick", "녹음듣기")
+                checkImagePermission(4)
             }
         }
     }
