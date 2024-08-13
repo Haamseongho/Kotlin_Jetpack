@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -33,7 +34,14 @@ class MainActivity : AppCompatActivity(), MediaAdapter.ItemClickListener {
         registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uriList ->
             uploadImages(uriList)
         }
-
+    private val cameraLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if(isSuccess){
+                Toast.makeText(applicationContext, "사진을 찍었습니다", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "사진을 찍어주세요", Toast.LENGTH_SHORT).show()
+            }
+        }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -135,29 +143,66 @@ class MainActivity : AppCompatActivity(), MediaAdapter.ItemClickListener {
         diaryAdapter?.submitList(updatedImages) // 이게 중요함 submitList에 넣어줘야 자동으로 데이터 관리하면서 리스트 셋팅함
     }
 
+    private fun uploadOneImage(uri: Uri){
+
+    }
+
 
     // 이미지 불러오기
-    private fun loadImages() {
-        imageLauncher.launch("image/*")
+    private fun loadImages(type: Int) {
+        if (type == 1)
+
+        else
+            imageLauncher.launch("image/*")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun checkImagePermission(type: Int) {
-        when {
+        // Camera & Gallery
+        if (type == 1 || type == 2) {
+            when {
+                // 카메라 권한과 갤러리 권한 모두 필요
+                ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.READ_MEDIA_IMAGES
+                ) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    loadImages(type)
+                }
 
-            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES)
-                    == PackageManager.PERMISSION_GRANTED -> {
-                loadImages()
-            }
+                shouldShowRequestPermissionRationale(android.Manifest.permission.READ_MEDIA_IMAGES) -> {
+                    showPermissionDialog()
+                }
 
-            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_MEDIA_IMAGES) -> {
-                showPermissionDialog()
-            }
-
-            else -> {
-                requestPermissions()
+                else -> {
+                    requestPermissions()
+                }
             }
         }
+        // Audio
+        else {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.READ_MEDIA_IMAGES
+                )
+                        == PackageManager.PERMISSION_GRANTED -> {
+                    loadImages()
+                }
+
+                shouldShowRequestPermissionRationale(android.Manifest.permission.READ_MEDIA_IMAGES) -> {
+                    showPermissionDialog()
+                }
+
+                else -> {
+                    requestPermissions()
+                }
+            }
+        }
+
     }
 
     // 질의할 것
