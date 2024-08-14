@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Diary</string>
+    <string name="add_info">정보저장</string>
+    <string name="add_picture">사진추가하기</string>
+    <string name="information1">사진을 길게 클릭할 경우 해당 사진을 삭제할지 수정할지 선택하실 수 있습니다. \n 플로팅 버튼을 선택할 경우 사진추가 및 녹음 관리로 진행됩니다.</string>
+
+    <string name="floating_information1">사진촬영</string>
+    <string name="floating_information2">갤러리</string>
+    <string name="floating_information3">녹음하기</string>
+    <string name="floating_information4">녹음듣기</string>
+</resources>

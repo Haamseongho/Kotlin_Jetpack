@@ -78,10 +78,22 @@
         android:id="@+id/phoneBook"
         style="@style/Value"
         android:layout_height="wrap_content"
+        android:paddingEnd="30dp"
         android:text="010-4618-2721"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtPhoneBook"
-        app:layout_constraintEnd_toEndOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="@+id/btnCall"
         app:layout_constraintStart_toStartOf="@id/guideline" />
+
+    <ImageView
+        android:id="@+id/btnCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_add_ic_call_24"
+        app:layout_constraintBottom_toBottomOf="@+id/phoneBook"
+        app:layout_constraintEnd_toEndOf="@id/name"
+        app:layout_constraintTop_toTopOf="@+id/phoneBook"
+
+        />
 
     <TextView
         android:id="@+id/txtEtc"
@@ -113,11 +125,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="80dp"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/deleteButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/baseline_360_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
+
+    <androidx.constraintlayout.helper.widget.Layer
+        android:id="@+id/layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btnCall, phoneBook"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
