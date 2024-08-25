@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity() {
         initViews()
 
 
-
-
         // OkHttpClient -> Http 통신이 막혀있음
         // https 통신 (Secure)
     }
@@ -59,11 +57,11 @@ class MainActivity : AppCompatActivity() {
         binding.serverHostEditText.addTextChangedListener {
             serverHost = it.toString()
         }
-        val url = binding.serverHostEditText.text
         binding.confirmButton.setOnClickListener {
             val request: Request = Request.Builder()
                 .url("http://$serverHost:8080")
                 .build()
+
 
             /*
             JSON 형식
@@ -71,7 +69,7 @@ class MainActivity : AppCompatActivity() {
              */
 
             // callback 구현체
-            val callback = object: Callback {
+            val callback = object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
                         Toast.makeText(this@MainActivity, "수신에 실패하였습니다.", Toast.LENGTH_SHORT).show()
@@ -82,11 +80,14 @@ class MainActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     // 요청 결과가 잘 왔는데 서버로부터 실패 결과를 보낸 경우
                     // 응답 자체도 모두 성공적으로 돌아온 경우
-                    if(response.isSuccessful){
+                    if (response.isSuccessful) {
                         val responseBody = response.body?.string()
 
                         // responseBody를 JSON 형태로 받을것
                         // 이 Body값을 어떤 형태로 받을지는 앞서 셋팅한 Data class 형태로!!
+                        val gson = Gson()
+                        // val messsage = Message(responseBody ?: "")
+                        // val responseData = gson.fromJson(messsage, Message::class.java)
                         val message = Gson().fromJson(responseBody, Message::class.java)
 
                         runOnUiThread {
@@ -98,8 +99,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     } else {
                         runOnUiThread {
-                            Toast.makeText(this@MainActivity, "수신에 실패하였습니다.", Toast.LENGTH_SHORT).show()
-                        }                    }
+                            Toast.makeText(this@MainActivity, "수신에 실패하였습니다.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
                 }
 
             }
