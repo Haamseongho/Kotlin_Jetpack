@@ -27,7 +27,7 @@ class ViewPagerAdapter(private val mActivity: MainActivity) :
             }
             1 -> {
                 return WebViewFragment(position, "https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ssc=tab.nx.all&query=%EA%B7%B8%EB%A6%B0%EB%A6%AC%EC%86%8C%EC%8A%A4&oquery=%EA%B7%B8%EB%A6%B0%EB%A6%AC%EC%86%8C%EC%8A%A4&tqi=irw3Awqo1Sossf%2F09f0ssssssoZ-362163").apply {
-                    listener = mActivity
+                   listener = mActivity
                 }
             }
             else -> {
