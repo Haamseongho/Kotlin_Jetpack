@@ -33,9 +33,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.play.services.location)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
