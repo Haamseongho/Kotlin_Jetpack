@@ -9,7 +9,8 @@ import com.example.githubrepositories.R
 import com.example.githubrepositories.databinding.ItemRepoBinding
 import com.example.githubrepositories.model.Repo
 
-class RepoAdapter : ListAdapter<Repo, RepoAdapter.RepoAdapterViewHolder>(diffUtil) {
+// onClick의 형 = Repo
+class RepoAdapter(private val onClick: (Repo) -> Unit) : ListAdapter<Repo, RepoAdapter.RepoAdapterViewHolder>(diffUtil) {
 
     companion object {
         // ItemCallbackDms 인터페이스니까 object로 하기
@@ -32,6 +33,10 @@ class RepoAdapter : ListAdapter<Repo, RepoAdapter.RepoAdapterViewHolder>(diffUti
             binding.descriptionTextView.text = item.repoDescription
             binding.forkCountTextView.text = item.forkCount.toString()
             binding.starCountTextView.text = item.starCount.toString()
+
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
         }
     }
 

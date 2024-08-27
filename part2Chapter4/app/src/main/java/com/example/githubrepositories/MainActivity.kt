@@ -20,22 +20,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.githubrepositories.adapter.UserAdapter
 import com.example.githubrepositories.databinding.ActivityMainBinding
-import com.example.githubrepositories.model.Repo
 import com.example.githubrepositories.service.Network
-import com.example.githubrepositories.service.Service
-import com.example.githubrepositories.service.proxy.ApiProxy
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.coroutineScope
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -117,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            // public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
@@ -132,21 +122,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED){
+            this.initViews()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun fetchCountryCode(location: Location) {
         val geocoder = Geocoder(this, Locale.getDefault())
-        geocoder.getFromLocation(
-            location.latitude,
-            location.longitude,
-            1,
-            android.location.Geocoder.GeocodeListener { addresses: MutableList<Address> ->
-                if (addresses.isNotEmpty()) {
-                    val address = addresses[0]
-                    val countryCode = address.countryCode
-                    Log.i("CountryCode :  ", countryCode)
-                } else {
-                    Log.d("CountryCode Error : ", "Error")
-                }
-            })
+        if (Geocoder.isPresent()) {
+            geocoder.getFromLocation(
+                location.latitude,
+                location.longitude,
+                1,
+                android.location.Geocoder.GeocodeListener { addresses: MutableList<Address> ->
+                    if (addresses.isNotEmpty()) {
+                        val address = addresses[0]
+                        val countryCode = address.countryCode
+                        Log.i("CountryCode :  ", countryCode)
+                    } else {
+                        Log.d("CountryCode Error : ", "No addresses found")
+                    }
+                })
+        } else {
+            Log.e("Geocoder Error", "Geocoder is not available")
+        }
     }
 
     private fun searchUsers(context: Context, userAdapter: UserAdapter, query: String) {

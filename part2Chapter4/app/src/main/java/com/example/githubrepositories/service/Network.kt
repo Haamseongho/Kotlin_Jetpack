@@ -1,5 +1,6 @@
 package com.example.githubrepositories.service
 
+import com.example.githubrepositories.ApiClient
 import com.example.githubrepositories.service.proxy.ApiProxy
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -21,13 +22,8 @@ class Network() {
     }
 
     init {
-        val httpClient = OkHttpClient.Builder()
-        val gson = GsonBuilder().setLenient().create()
-        val retrofit = Retrofit.Builder().baseUrl("https://api.github.com/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(httpClient.build()).build()
-
-        apiProxy = ApiProxy(retrofit)
+        apiProxy = ApiProxy(
+            ApiClient.retrofit)
     }
 
     fun getApiProxy(): ApiProxy? {
