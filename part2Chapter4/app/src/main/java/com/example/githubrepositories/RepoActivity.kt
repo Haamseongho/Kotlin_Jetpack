@@ -3,6 +3,8 @@ package com.example.githubrepositories
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,8 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubrepositories.adapter.RepoAdapter
 import com.example.githubrepositories.databinding.ActivityRepoBinding
+import com.example.githubrepositories.model.Repo
+import com.example.githubrepositories.model.User
 import com.example.githubrepositories.service.Network
 import com.example.githubrepositories.service.proxy.ApiProxy
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RepoActivity : AppCompatActivity() {
 
@@ -74,7 +81,22 @@ class RepoActivity : AppCompatActivity() {
     private fun listRepo(repoAdapter: RepoAdapter, page: Int) {
         network = Network.getInstance()
         binding.userNameTextView.text = username
-        network.getApiProxy()
-            ?.getApiDataFromGithub(this@RepoActivity, username ?: "", repoAdapter, page)
+        network.getService().listRepos(username ?: "", page).enqueue(object : Callback<List<Repo>> {
+            override fun onResponse(call: Call<List<Repo>>, response: Response<List<Repo>>) {
+                Log.d("MainActivity", response.body().toString())
+                ApiProxy.hasMore =
+                    response.body()?.count() == 30 // per_page = 30이므로 더 있음을 확인하고 페이지를 넘김
+                // 현재 리스트 + 응답으로 오는 리스트 (+ 만써도 더해짐) 응답 없는경우 생각해서 .orEmpty() 두기
+                repoAdapter.submitList(
+                    repoAdapter.currentList + response.body().orEmpty()
+                )  // 새로운것만 넣는 것이 아니라 어댑터의 현재 리스트 + 응답 바디값
+
+            }
+
+            override fun onFailure(call: Call<List<Repo>>, response: Throwable) {
+                Toast.makeText(this@RepoActivity, "데이터 가져오기 실패", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 }

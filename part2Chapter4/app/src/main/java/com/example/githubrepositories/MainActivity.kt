@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -22,10 +23,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubrepositories.adapter.UserAdapter
 import com.example.githubrepositories.databinding.ActivityMainBinding
+import com.example.githubrepositories.model.UserDTO
 import com.example.githubrepositories.service.Network
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Runnable
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -156,6 +161,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun searchUsers(context: Context, userAdapter: UserAdapter, query: String) {
-        network?.getApiProxy()?.searchUsers(context, query, userAdapter)
+        network?.getService()!!.searchUsers(query).enqueue(object: Callback<UserDTO> {
+            override fun onResponse(call: Call<UserDTO>, response: Response<UserDTO>) {
+                if (response.isSuccessful) {
+                    Log.e("MainActivity", response.body().toString())
+                    userAdapter.submitList(response.body()?.items) // 비어있으면 공백으로 들어감
+                }
+            }
+
+            override fun onFailure(call: Call<UserDTO>, response: Throwable) {
+                Toast.makeText(context, "데이터 가져오기 실패", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

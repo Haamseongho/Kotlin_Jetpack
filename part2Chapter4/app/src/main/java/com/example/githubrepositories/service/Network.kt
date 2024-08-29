@@ -6,10 +6,10 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 class Network() {
-    private var apiProxy: ApiProxy? = null
-
+    private var service: Service? = null
     companion object {
         @Volatile
         private var instance: Network? = null
@@ -22,12 +22,9 @@ class Network() {
     }
 
     init {
-        apiProxy = ApiProxy(
-            ApiClient.retrofit)
+        service = ApiClient.retrofit.create(Service::class.java)
     }
-
-    fun getApiProxy(): ApiProxy? {
-        return apiProxy
+    fun getService(): Service{
+        return service!!
     }
-
 }
