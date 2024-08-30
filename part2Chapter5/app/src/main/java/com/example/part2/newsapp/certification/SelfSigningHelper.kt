@@ -4,11 +4,13 @@ import android.content.Context
 import com.example.part2.newsapp.R
 import java.io.InputStream
 import java.lang.Exception
+import java.net.URL
 import java.security.KeyStore
 import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.security.cert.X509Certificate
@@ -45,7 +47,6 @@ class SelfSigningHelper @Inject constructor(
             sslContext = SSLContext.getInstance("TLS")
             sslContext.init(null, tmf.trustManagers, java.security.SecureRandom())
             caInput.close()
-
         } catch(e: Exception){
             e.printStackTrace()
         }
