@@ -1,10 +1,10 @@
-package com.example.part2.newsapp
+package com.example.part2.newsapp.Service
 
 import com.example.part2.newsapp.model.NewsRss
 import retrofit2.Call
 import retrofit2.http.GET
 
-interface NewsService {
-    @GET("rss?hl=ko&gl=KR&ceid=KR:ko")
+interface Service {
+    @GET("/rss")
     fun mainFeed(): Call<NewsRss>
 }
