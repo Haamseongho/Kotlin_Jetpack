@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 투명 배경 -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+
+    <!-- 아이콘 배치 -->
+    <item android:gravity="center_vertical|right" android:right="10dp">
+        <bitmap android:width="15dp" android:height="9dp" android:src="@drawable/baseline_arrow_drop_down_24" android:tint="@color/white" />
+    </item>
+</selector>
