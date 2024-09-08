@@ -1,15 +1,14 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("kotlin-kapt")
 }
 
 android {
-    namespace = "com.example.part2.newsapp"
+    namespace = "com.example.part2.restapisolution"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.part2.newsapp"
+        applicationId = "com.example.part2.restapisolution"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -41,18 +40,6 @@ android {
 }
 
 dependencies {
-
-    //noinspection UseTomlInstead
-    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation ("com.tickaroo.tikxml:annotation:0.8.13")
-    implementation ("com.tickaroo.tikxml:core:0.8.13")
-    implementation ("com.tickaroo.tikxml:retrofit-converter:0.8.13")
-    implementation ("javax.inject:javax.inject:1")
-    implementation("org.json:json:20210307")
-    kapt ("com.tickaroo.tikxml:processor:0.8.13")
-
-
-
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.play.services.location)
