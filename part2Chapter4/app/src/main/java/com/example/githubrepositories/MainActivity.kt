@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<UserDTO>, response: Throwable) {
+            override fun onFailure(call: Call<UserDTO>, t: Throwable) {
                 Toast.makeText(context, "데이터 가져오기 실패", Toast.LENGTH_SHORT).show()
             }
         })

@@ -42,10 +42,14 @@ class UserAdapter(val onClick: (User) -> Unit) :
 
     // ViewHolder를 리턴해주는데,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserAdapterViewHolder {
-        val layoutInflater =
-            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val binding: ItemUserBinding = ItemUserBinding.inflate(layoutInflater, parent, false)
-        return UserAdapterViewHolder(binding)
+        return UserAdapterViewHolder(
+            binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
+//        val binding: I
+//        val layoutInflater =
+//            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//        val binding: ItemUserBinding = ItemUserBinding.inflate(layoutInflater, parent, false)
+//        return UserAdapterViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: UserAdapterViewHolder, position: Int) {
