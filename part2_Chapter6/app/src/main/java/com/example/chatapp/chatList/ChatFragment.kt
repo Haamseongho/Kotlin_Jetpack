@@ -6,11 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.chatapp.DatabaseKey
 import com.example.chatapp.R
-import com.example.chatapp.chatList.adapter.ChatAdapter
+import com.example.chatapp.chatList.adapter.ChatListAdapter
 import com.example.chatapp.chatList.model.ChatRoomItem
 import com.example.chatapp.databinding.FragmentChatBinding
-import com.example.chatapp.databinding.ItemChatBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,18 +52,32 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentChatBinding.bind(view) // Activity는 inflate, Fragment는 bind
-        val chatListAdapter = ChatAdapter()
+        val chatListAdapter = ChatListAdapter()
 
         binding.chatListRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = chatListAdapter
         }
 
-        chatListAdapter.submitList(
-            mutableListOf<ChatRoomItem>().apply {
-                add(ChatRoomItem("roomID","otherUserName", "lastMessage"))
+        val currentUserId = Firebase.auth.currentUser?.uid ?: return
+        val chatRoomsDB = Firebase.database.reference.child(DatabaseKey.DB_CHAT_ROOMS).child(currentUserId)
+
+        // addValueEventListener = 값 넣어주는거
+        chatRoomsDB.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // ChatRooms ID랑 매핑
+                val chatRoomList = snapshot.children.map {
+                    it.getValue(ChatRoomItem::class.java) // ChatRoomItem이 매핑되어 값이 나옴
+                }
+
+                chatListAdapter.submitList(chatRoomList)
             }
-        )
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     companion object {

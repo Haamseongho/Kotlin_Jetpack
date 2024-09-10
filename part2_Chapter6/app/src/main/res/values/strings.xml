@@ -5,4 +5,5 @@
     <string name="menu_userList">친구목록</string>
     <string name="menu_chatList">채팅리스트</string>
     <string name="menu_myPage">마이페이지</string>
+    <string name="send_message">전송하기</string>
 </resources>

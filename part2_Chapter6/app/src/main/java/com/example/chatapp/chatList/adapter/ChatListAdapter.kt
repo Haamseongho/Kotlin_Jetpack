@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.chatList.model.ChatRoomItem
 import com.example.chatapp.databinding.ItemChatBinding
 
-class ChatAdapter : ListAdapter<ChatRoomItem, ChatAdapter.ViewHolder>(diff) {
+class ChatListAdapter : ListAdapter<ChatRoomItem, ChatListAdapter.ViewHolder>(diff) {
 
     inner class ViewHolder(private val binding: ItemChatBinding) :
         RecyclerView.ViewHolder(binding.root) {

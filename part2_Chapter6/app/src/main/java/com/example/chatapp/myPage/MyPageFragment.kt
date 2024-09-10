@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.chatapp.DatabaseKey
 import com.example.chatapp.LoginActivity
 import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentMyPageBinding
+import com.example.chatapp.userList.model.UserItem
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
@@ -48,6 +51,17 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMyPageBinding.bind(view)
+        val currentUserId = Firebase.auth.currentUser?.uid ?: ""
+        // TODO Firebase realtime database update
+        // DB_USERS에서 내 계정 아이디의 방을 찾아가기 위함
+        val currentUserDB = Firebase.database.reference.child(DatabaseKey.DB_USERS).child(currentUserId)
+
+        // get으로 가져오면 addSuccessListneer 로 됨
+        currentUserDB.get().addOnSuccessListener {
+            val currentUserItem = it.getValue(UserItem::class.java)  ?: return@addOnSuccessListener // UserItem 받아오기
+            binding.usernameEditText.setText(currentUserItem.username)
+            binding.descriptionEditText.setText(currentUserItem.description)
+        }
 
         binding.applyButton.setOnClickListener {
             val username = binding.usernameEditText.text.toString()
@@ -57,7 +71,12 @@ class MyPageFragment : Fragment() {
                 Toast.makeText(view.context, "유저 이름은 빈 값으로 두지 말 것", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // TODO Firebase realtime database update
+
+
+            val user = mutableMapOf<String, Any>()
+            user["username"] = username
+            user["description"] = description
+            currentUserDB.updateChildren(user)
         }
 
         binding.signOutButton.setOnClickListener {
