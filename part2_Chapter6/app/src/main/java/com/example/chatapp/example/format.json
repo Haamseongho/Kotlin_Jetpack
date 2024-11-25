@@ -1,0 +1,66 @@
+{
+  "User" : {
+    "jTiQ7kce90801jlkfz123" : {
+      "userId" : "jTiQ7kce90801jlkfz123",
+      "username": "aaaa",
+      "description": " bbbb"
+    },
+    "j123knmafasdfjo123" : {
+      "username" : "a123dz",
+      "description" : "dfadfq"
+    }
+  },
+  "chatRoom" : {
+    "채팅방 아이디" : {
+
+    }
+  },
+  "chat" : {
+    "채팅방 아이디" : {
+      "userA": "aa",
+      "userB": "bb",
+      "lastMessage" : "~~~~",
+      "Message" : {
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        },
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        },
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        },
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        }
+      }
+    },
+    "채팅방 아이디" : {
+      "userA": "aa",
+      "userB": "bb",
+      "lastMessage" : "~~~~",
+      "Message" : {
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        },
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        },
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        },
+        "fdsakfjdsljf" : {
+          "name" : "aaaa",
+          "message" : "aabb"
+        }
+      }
+    }
+  }
+}
